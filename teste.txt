@@ -1,0 +1,10 @@
+curl -X POST http://localhost:8000/api/frete \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{
+    "cep_destino": "04565001",
+    "peso": 1,
+    "altura": 10,
+    "largura": 10,
+    "comprimento": 10
+  }'
