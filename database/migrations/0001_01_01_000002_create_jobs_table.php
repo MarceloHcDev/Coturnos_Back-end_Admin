@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * ============================================================================
+ * INFRAESTRUTURA LARAVEL (TEMPORÁRIO - BANCO DE DADOS LOCAL)
+ * ============================================================================
+ * Esta migration atende ao driver local de Filas (QUEUE_CONNECTION=database)
+ * para processamento em background (e-mails, webhooks) no ambiente de dev.
+ * Na Semana 3 da Sprint, com o container Redis ativo no Docker Sail pelo Ryan,
+ * as filas migrarão para memória (QUEUE_CONNECTION=redis).
+ * ============================================================================
+ */
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
