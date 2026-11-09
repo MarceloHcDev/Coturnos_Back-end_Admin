@@ -25,4 +25,11 @@ Route::prefix('v1/admin')
         Route::get('products/{product}/stock/movements', [AdminStockController::class, 'movements'])->name('stock.movements');
         Route::post('products/{product}/stock/movements', [AdminStockController::class, 'move'])->name('stock.move');
         Route::patch('products/{product}/stock/{stock}', [AdminStockController::class, 'update'])->name('stock.update');
+
+        //>> Cloudinary - envio de imagens
+        //imagens do hero
+        Route::post('/upload-store-images', [ImageController::class, 'upload']);
+        //imagens dos produtos
+        Route::post('products/{product}/image', [ProductController::class, 'uploadImage']);
+
     });
