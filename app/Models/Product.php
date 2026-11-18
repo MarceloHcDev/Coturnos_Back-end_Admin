@@ -2,16 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Str;
-use LogicException;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'products';
 
@@ -20,69 +18,29 @@ class Product extends Model
         'slug',
         'product_type',
         'brand',
+        'collection',        // ex.: 'classico', 'elite' (filtro da home)
+        'badge',             // ex.: 'Novo', 'Oferta' (selo no card)
         'description',
+        'image_public_id',   // public_id da imagem principal no Cloudinary
+        'hover_public_id',   // public_id da imagem de hover no Cloudinary
         'base_price',
         'promotional_price',
-        'active',
         'weight',
         'height',
         'width',
         'length',
+        'active',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'active' => 'boolean',
-            'base_price' => 'decimal:2',
-            'promotional_price' => 'decimal:2',
-            'weight' => 'decimal:2',
-            'height' => 'decimal:2',
-            'width' => 'decimal:2',
-            'length' => 'decimal:2',
-        ];
-    }
-
-    protected static function booted(): void
-    {
-        static::creating(function (Product $product) {
-            if (empty($product->slug)) {
-                $product->slug = static::generateUniqueSlug($product->name);
-            }
-        });
-
-        // Regra de negócio: produto não pode ser excluído, apenas inativado.
-        static::deleting(function () {
-            throw new LogicException('Produtos não podem ser excluídos, apenas inativados.');
-        });
-    }
-
-    public static function generateUniqueSlug(string $name): string
-    {
-        $base = Str::slug($name) ?: 'produto';
-        $slug = $base;
-        $i = 2;
-
-        while (static::where('slug', $slug)->exists()) {
-            $slug = "{$base}-{$i}";
-            $i++;
-        }
-
-        return $slug;
-    }
-
-    /**
-     * Produtos visíveis na loja pública.
-     */
-    public function scopeActive(Builder $query): Builder
-    {
-        return $query->where('active', true);
-    }
-
-    public function stocks(): HasMany
-    {
-        return $this->hasMany(ProductStock::class);
-    }
+    protected $casts = [
+        'base_price'        => 'decimal:2',
+        'promotional_price' => 'decimal:2',
+        'weight'            => 'decimal:2',
+        'height'            => 'decimal:2',
+        'width'             => 'decimal:2',
+        'length'            => 'decimal:2',
+        'active'            => 'boolean',
+    ];
 
     public function orderItems(): HasMany
     {
